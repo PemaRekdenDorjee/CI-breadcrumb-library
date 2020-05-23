@@ -14,8 +14,9 @@ class Testing_breadcrumb extends BaseController
                 $make_bread->add('second crumb', 'the_test', 0);
                 $make_bread->add('test','http://google.com');
                 $make_bread->output();
-        echo $breadcrumb;
-	//send the breadcrumb to view	
+                echo $breadcrumb;
+		
+         //send the breadcrumb to view	
         //return view('welcome_message',$breadcrumb);
 	}
 }
