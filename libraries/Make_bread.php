@@ -1,28 +1,20 @@
-<?php  if (!defined('BASEPATH')) exit('No direct script access allowed');
-
+<?php
+namespace App\Libraries;
 class Make_bread
 {
+    private $_include_home = 'Dashboard';
     private $_breadcrumb = array();
-    private $_include_home;
-    private $_container_open;
-    private $_container_close;
-    private $_divider;
-    private $_crumb_open;
-    private $_crumb_close;
+    private $_divider = '&nbsp;/&nbsp;';
+    private $_container_open = '<div id="breadcrumb">';
+    private $_container_close = '</div>';
+    private $_crumb_open = '';
+    private $_crumb_close = '';
 
     public function __construct()
     {
-        $CI =& get_instance();
-        $CI->load->helper('url');
-        $CI->load->config('make_bread', TRUE);
-        $this->_include_home = $CI->config->item('include_home', 'make_bread');
-        $this->_container_open = $CI->config->item('container_open', 'make_bread');
-        $this->_container_close = $CI->config->item('container_close', 'make_bread');
-        $this->_divider = $CI->config->item('divider', 'make_bread');
-        $this->_crumb_open = $CI->config->item('crumb_open', 'make_bread');
-        $this->_crumb_close = $CI->config->item('crumb_close', 'make_bread');
-        if(isset($this->_include_home) && (strlen($this->_include_home)>0))
+        if(isset($this->_include_home))
         {
+            // we will trim the last '/' just to make sure we are consistent with all servers
             $this->_breadcrumb[] = array('title'=>$this->_include_home, 'href'=>rtrim(base_url(),'/'));
         }
     }
@@ -32,14 +24,13 @@ class Make_bread
         // if the method won't receive the $title parameter, it won't do anything to the $_breadcrumb
         if (is_null($title)) return;
         // first let's find out if we have a $href
-        if(isset($href) && strlen($href)>0)
-        {
+        if(isset($href) && strlen($href)>0) {
             // if $segment is not FALSE we will build the URL from the previous crumb
-            if ($segment)
-            {
+            if ($segment) {
                 $previous = $this->_breadcrumb[sizeof($this->_breadcrumb) - 1]['href'];
                 $href = $previous . '/' . $href;
-            } // else if the $href is not an absolute path we compose the URL from our site's URL
+            }
+            // else if the $href is not an absolute path we compose the URL from our site's URL
             elseif (!filter_var($href, FILTER_VALIDATE_URL))
             {
                 $href = site_url($href);
@@ -57,7 +48,6 @@ class Make_bread
         {
             foreach($this->_breadcrumb as $key=>$crumb)
             {
-                // we put the crumb with open and closing tags
                 $output .= $this->_crumb_open;
                 if(strlen($crumb['href'])>0)
                 {
